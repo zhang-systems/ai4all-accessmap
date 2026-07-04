@@ -2,4 +2,9 @@ __pycache__/
 .ipynb_checkpoints/
 .venv/
 *.pyc
-data/raw/*.gpkg
+data/raw/*
+data/models/*.pkl
+data/processed/*.npy
+data/processed/*.index
+data/processed/*.csv
+data/processed/*.gpkg
