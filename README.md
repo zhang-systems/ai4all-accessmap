@@ -1,5 +1,7 @@
 # AccessMap: Sidewalk Accessibility Modeling & Retrieval
 
+**Live demo:** https://accessmap-13a.streamlit.app
+
 ## Team — Group 13A
 
 Ashton Moraes, Amen Bush, Laxmi Pesara, Gavino Vargas, Zaina Nadeem, Zheng Zhang

@@ -30,6 +30,8 @@ deployed and tested. 8 files saved and verified.
   filled the same. Data limit, not a bug.
 
 ## NEW: Streamlit App — deployed and tested
+**Live:** https://accessmap-13a.streamlit.app
+
 Built `app.py` with 3 tabs:
 
 1. **Sidewalk Checker (PMR)** — user enters width, curb height,
@@ -41,6 +43,13 @@ Built `app.py` with 3 tabs:
    (no US sidewalk prediction — null finding), and known limits.
 
 ### Deployment decisions
+- Deployed to Streamlit Cloud (free tier), straight from the GitHub
+  repo. The app builds from `requirements.txt` and loads the model
+  files committed in `data/`.
+- Model files were originally in `.gitignore`. We force-added the 5
+  files the app needs (2 model pkls, faiss index, embeddings,
+  housing_clean.csv) so the cloud build can find them. ~18 MB total,
+  well under GitHub's limits.
 - Load models with `joblib`, cache with `@st.cache_resource` so files
   load once, not per click.
 - Housing search only covers the 6,425 embedded addresses. No new
@@ -57,7 +66,12 @@ Built `app.py` with 3 tabs:
 | Narrow sidewalk | width 0.5, curb 0.02 | Not accessible (71%) | Yes |
 | Narrow + high curb | width 0.5, curb 0.10 | Not accessible (99%) | Yes |
 | Narrow + curb unknown | width 0.5, missing | Not accessible (98%) | Yes |
+| Extreme narrow (cloud) | width 0.1, missing | Not accessible (100%) | Yes |
 | Address search | Beaverton, OR query | 5 Beaverton results, distance 0.154 → 0.491 | Yes |
+| Address search (cloud) | Same query, k=3 | Same 3 results, same distances | Yes |
+
+All tests were re-run on the live cloud app after deployment. Cloud
+results match local results exactly — same model files, same outputs.
 
 ### Bug found and fixed
 - "Failed to fetch dynamically imported module" on the search tab.
@@ -66,5 +80,7 @@ Built `app.py` with 3 tabs:
   it happens again.
 
 ## Next Step
-1. Final presentation slides (use the app screenshots)
+1. Final presentation slides (use the app screenshots + live URL)
 2. Practice the demo flow: problem → checker → search → limits
+3. Demo uses the live URL, not localhost — more stable, and anyone
+   can follow along on their own device
