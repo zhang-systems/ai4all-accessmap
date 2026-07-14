@@ -4,7 +4,7 @@
 
 ## Team — Group 13A
 
-Ashton Moraes, Amen Bush, Laxmi Pesara, Gavino Vargas, Zaina Nadeem, Zheng Zhang
+Zheng Zhang, Zaina Nadeem, Laxmi Pesara, Gavino Vargas, Ashton Moraes, Amen Bush  
 
 ---
 
