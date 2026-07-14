@@ -208,6 +208,8 @@ Neither number should be read at face value:
 
 ## How to Run
 
+> Don't want to run locally? Use the live app: https://accessmap-13a.streamlit.app
+
 **Pipeline (run once):**
 ```
 1. Run notebooks in order: 01 → 02 → 03
