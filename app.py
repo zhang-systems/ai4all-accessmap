@@ -14,7 +14,7 @@ import streamlit as st
 import joblib
 import faiss
 
-st.set_page_config(page_title="AccessMap", page_icon="wheelchair", layout="centered")
+st.set_page_config(page_title="AccessMap", layout="centered")
 
 MODELS_DIR = "data/models"
 PROCESSED_DIR = "data/processed"
@@ -33,6 +33,177 @@ FRIENDLY_NAMES = {
     "crossing": "Crossing (yes/no)",
     "length": "Segment length",
 }
+
+# Static satellite image of Amsterdam (PMR dataset region), served by Esri's
+# public World Imagery REST endpoint. No API key required.
+SATELLITE_BG_URL = (
+    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/"
+    "MapServer/export?bbox=4.82,52.33,4.98,52.41&bboxSR=4326&size=1920,1200"
+    "&format=png&f=image"
+)
+
+
+# ---------------------------------------------------------
+# Theme: satellite background + professional dashboard styling
+# ---------------------------------------------------------
+def apply_theme():
+    st.markdown(
+        f"""
+        <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        html, body, [class*="css"] {{
+            font-family: 'Inter', sans-serif;
+        }}
+
+        /* Satellite map fills the page, fully visible - no dark scrim */
+        .stApp {{
+            background: url('{SATELLITE_BG_URL}');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }}
+
+        .block-container {{
+            padding-top: 2rem;
+        }}
+
+        /* Header card floats on top of the map */
+        .am-hero {{
+            background: rgba(15, 23, 42, 0.82);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            padding: 1.5rem 1.8rem;
+            margin-bottom: 1.2rem;
+            backdrop-filter: blur(6px);
+            box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+        }}
+
+        .am-hero h1 {{
+            color: #FFFFFF;
+            font-size: 1.9rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin-bottom: 0.25rem;
+        }}
+
+        .am-hero p {{
+            color: #CBD5E1;
+            font-size: 0.98rem;
+            margin: 0;
+        }}
+
+        .am-badge {{
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            color: #94A3B8;
+            padding: 0.15rem 0.65rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            margin-bottom: 0.7rem;
+        }}
+
+        /* Tabs */
+        .stTabs [data-baseweb="tab-list"] {{
+            gap: 4px;
+            background: rgba(15, 23, 42, 0.75);
+            padding: 6px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(6px);
+        }}
+
+        .stTabs [data-baseweb="tab"] {{
+            height: 44px;
+            border-radius: 6px;
+            color: #CBD5E1;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }}
+
+        .stTabs [aria-selected="true"] {{
+            background: #1D4ED8 !important;
+            color: white !important;
+        }}
+
+        /* Content area sits on top of the map like a dashboard panel */
+        section[data-testid="stMain"] > div.block-container {{
+            background: rgba(255,255,255,0.72);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 18px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.20);
+        }}
+
+        .am-panel h2, .am-panel h3 {{
+            color: #0F172A;
+            font-weight: 700;
+        }}
+
+        .am-panel p, .am-panel li {{
+            color: #334155;
+        }}
+
+        .am-panel strong {{
+            color: #1D4ED8;
+        }}
+
+        /* Inputs */
+        .stNumberInput input, .stSelectbox div[data-baseweb="select"] > div {{
+            border-radius: 6px !important;
+        }}
+
+        /* Buttons */
+        .stButton > button {{
+            background: #1D4ED8;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0.5rem 1.3rem;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(29, 78, 216, 0.3);
+            transition: background 0.15s ease;
+        }}
+
+        .stButton > button:hover {{
+            background: #1E40AF;
+        }}
+
+        /* Alerts */
+        div[data-testid="stAlert"] {{
+            border-radius: 8px;
+        }}
+
+        /* Dataframe */
+        div[data-testid="stDataFrame"] {{
+            border-radius: 8px;
+            overflow: hidden;
+        }}
+
+        header[data-testid="stHeader"] {{
+            background: transparent;
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def hero():
+    st.markdown(
+        """
+        <div class="am-hero">
+            <h1>AccessMap</h1>
+            <p>Sidewalk accessibility: check a segment, search similar addresses.</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 
 # ---------------------------------------------------------
@@ -98,8 +269,8 @@ def explain_factors(width, curb_val, curb_known, crossing):
 # ---------------------------------------------------------
 # App
 # ---------------------------------------------------------
-st.title("AccessMap")
-st.caption("Sidewalk accessibility: check a segment, search similar addresses.")
+apply_theme()
+hero()
 
 tab_pmr, tab_housing, tab_about = st.tabs(
     ["Sidewalk Checker (PMR)", "Address Search (Housing)", "About & Limits"]
@@ -109,6 +280,7 @@ tab_pmr, tab_housing, tab_about = st.tabs(
 # Tab 1: PMR sidewalk checker
 # ---------------------------------------------------------
 with tab_pmr:
+    st.markdown('<div class="am-panel">', unsafe_allow_html=True)
     st.header("Check a sidewalk segment")
     st.write(
         "Enter the segment's measurements. The model says if it's "
@@ -162,7 +334,7 @@ with tab_pmr:
             else:
                 st.error(f"Not accessible (confidence {conf:.0%})")
 
-            # ---- Why the model decided this (Nordis feedback) ----
+            # ---- Why the model decided this ----
             st.markdown("**Why the model says this:**")
             st.markdown(explain_factors(width, curb_val, curb_known, crossing))
 
@@ -200,11 +372,13 @@ labels exist). Treat the result as guidance, not ground truth.
                 "Model files not found. Run notebook 03 first so "
                 "data/models/ has rf_pmr.pkl and crossing_encoder.pkl."
             )
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # ---------------------------------------------------------
 # Tab 2: Housing address similarity search
 # ---------------------------------------------------------
 with tab_housing:
+    st.markdown('<div class="am-panel">', unsafe_allow_html=True)
     st.header("Find similar addresses")
     st.write(
         "Pick an address from the dataset. FAISS returns the most "
@@ -248,11 +422,13 @@ with tab_housing:
             "Search files not found. Run notebook 03 first so "
             "data/processed/ has housing_faiss.index and the embeddings."
         )
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # ---------------------------------------------------------
 # Tab 3: About & limitations
 # ---------------------------------------------------------
 with tab_about:
+    st.markdown('<div class="am-panel">', unsafe_allow_html=True)
     st.header("About this project")
     st.markdown(
         """
@@ -281,3 +457,4 @@ with tab_about:
         """
     )
     st.caption("Group 13A — AI4ALL Ignite Summer 2026")
+    st.markdown('</div>', unsafe_allow_html=True)
