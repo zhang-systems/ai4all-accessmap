@@ -8,7 +8,7 @@ Zheng Zhang, Zaina Nadeem, Laxmi Pesara, Gavino Vargas, Ashton Moraes, Amen Bush
 
 ---
 
-## 📌 Project Poster
+## Project Poster
 
 ![AccessMap project poster](reports/poster.jpg)
 
