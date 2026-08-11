@@ -8,6 +8,15 @@ Zheng Zhang, Zaina Nadeem, Laxmi Pesara, Gavino Vargas, Ashton Moraes, Amen Bush
 
 ---
 
+## 📌 Project Poster
+
+![AccessMap project poster](reports/poster.jpg)
+
+*AI4ALL Group 13A — AccessMap Poster*
+
+---
+
+
 ## Part 1 — The Problem & Why It Matters
 
 Wheelchair users can't tell if a sidewalk is passable before they get
