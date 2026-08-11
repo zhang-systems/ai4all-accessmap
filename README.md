@@ -2,6 +2,37 @@
 
 **Live demo:** https://accessmap-13a.streamlit.app
 
+AccessMap asks a simple question — **can data predict which sidewalks are
+accessible for wheelchair users?** — and answers it honestly. We built and
+compared two models on two independent datasets (Amsterdam sidewalk
+measurements and US crowd-labeled addresses), caught and diagnosed a bias
+problem in one of them, and shipped a live app that reports only what the
+data actually supports.
+
+## Table of Contents
+
+- [Team — Group 13A](#team--group-13a)
+- [Project Poster](#project-poster)
+- [Part 1 — The Problem & Why It Matters](#part-1--the-problem--why-it-matters)
+  - [The Data](#the-data)
+  - [What We Built](#what-we-built)
+- [Part 2 — What We Tried, Where We Failed, How We Iterated](#part-2--what-we-tried-where-we-failed-how-we-iterated)
+  - [V1: Baseline models — two problems show up](#v1-baseline-models--two-problems-show-up)
+  - [V2: Fixing the Housing bias](#v2-fixing-the-housing-bias)
+  - [V3: Fixing the PMR precision](#v3-fixing-the-pmr-precision)
+  - [Retrieval (FAISS)](#retrieval-faiss)
+  - [V4: Deployment (Streamlit app)](#v4-deployment-streamlit-app)
+- [Part 3 — Results & What We Learned](#part-3--results--what-we-learned)
+  - [Final results](#final-results)
+  - [What we learned (including from the failures)](#what-we-learned-including-from-the-failures)
+  - [Limitations](#limitations)
+  - [If we had more time](#if-we-had-more-time)
+- [How to Run](#how-to-run)
+- [Contributing](#contributing)
+- [Acknowledgments & References](#acknowledgments--references)
+
+---
+
 ## Team — Group 13A
 
 Zheng Zhang, Zaina Nadeem, Laxmi Pesara, Gavino Vargas, Ashton Moraes, Amen Bush  
@@ -56,6 +87,9 @@ Three notebooks and one app:
 3. **03 — Modeling (Random Forest) + embeddings (ModernBERT) + search (FAISS)**
 4. **app.py — Streamlit app** that loads the trained models so anyone
    can use them without touching a notebook
+
+**Built with:** Python, pandas, scikit-learn (Random Forest), ModernBERT
+(sentence-transformers), FAISS, Streamlit, GeoPandas
 
 Pipeline outputs: 2 models, 3 encoders/scalers, 1 embedding file,
 2 FAISS indexes. 8 files, all verified at export. The app loads these
@@ -235,3 +269,36 @@ Opens at http://localhost:8501. If a tab shows a
 "Failed to fetch module" error, hard refresh (Ctrl+Shift+R).
 
 Requirements: pandas, geopandas, scikit-learn, sentence-transformers, faiss, streamlit
+
+---
+
+## Contributing
+
+This was built as a fixed-scope student project for AI4ALL Ignite, so we
+aren't actively accepting feature contributions — but feedback is welcome:
+
+- **Found a bug or an issue?** Open a GitHub Issue describing what happened,
+  what you expected, and how to reproduce it.
+- **Have a suggestion?** Open an Issue tagged `enhancement` — we're
+  especially interested in ideas around the "If we had more time" list above.
+- **Want to fork and extend it?** Go for it — see [Acknowledgments &
+  References](#acknowledgments--references) below for data licensing/citation
+  requirements if you reuse the underlying datasets.
+
+---
+
+## Acknowledgments & References
+
+**Data sources**
+- City of Amsterdam Open Data — PMR sidewalk accessibility dataset (72,274 segments)
+- CrowdFlower / Figure Eight, "Data for Everyone" — Housing: Wheelchairs dataset (10,104 crowd-labeled US addresses)
+
+**Methods & tools**
+- Breiman, L. (2001). *Random Forests.* Machine Learning, 45(1).
+- Johnson, J., Douze, M., & Jégou, H. (2019). *Billion-scale similarity search with GPUs.* IEEE Transactions on Big Data. (FAISS)
+- Warner, B., et al. (2024). *Smarter, Better, Faster, Longer: A Modern Bidirectional Encoder.* (ModernBERT)
+- Mehrabi, N., et al. (2021). *A Survey on Bias and Fairness in Machine Learning.* ACM Computing Surveys.
+- Saha, M., et al. (2019). *Project Sidewalk: A Web-based Crowdsourcing Tool for Collecting Sidewalk Accessibility Data at Scale.* ACM CHI.
+
+**Program**
+Built as part of [AI4ALL Ignite](https://ai-4-all.org/), Summer 2026, Group 13A.
