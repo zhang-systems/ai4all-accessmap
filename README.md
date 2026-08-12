@@ -35,7 +35,7 @@ data actually supports.
 
 ## Team — Group 13A
 
-Zheng Zhang, Zaina Nadeem, Laxmi Pesara, Gavino Vargas, Ashton Moraes, Amen Bush  
+Zheng Zhang, Zaina Nadeem, Laxmi Pesara, Ashton Moraes, Amen Bush  
 
 ---
 
