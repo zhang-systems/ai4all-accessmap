@@ -9,6 +9,14 @@ measurements and US crowd-labeled addresses), caught and diagnosed a bias
 problem in one of them, and shipped a live app that reports only what the
 data actually supports.
 
+---
+
+## Team — Group 13A
+
+Zheng Zhang, Zaina Nadeem, Laxmi Pesara, Ashton Moraes, Amen Bush  
+
+---
+
 ## Table of Contents
 
 - [Team — Group 13A](#team--group-13a)
@@ -31,13 +39,7 @@ data actually supports.
 - [Contributing](#contributing)
 - [Acknowledgments & References](#acknowledgments--references)
 
----
 
-## Team — Group 13A
-
-Zheng Zhang, Zaina Nadeem, Laxmi Pesara, Ashton Moraes, Amen Bush  
-
----
 
 ## Project Poster
 
